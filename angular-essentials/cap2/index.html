@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html ng-app="parking">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJs Essentials</title>
+    <script src="../js-deps/angular.js"></script>
+    <script src="../js-deps/angular-sanitize.js"></script>
+
+    <script>
+        var parking = angular.module('parking', []);
+
+        parking.controller('parkingCtrl', function ($scope) {
+
+            $scope.title = 'Parking.......';
+            $scope.titleHtml = '<b>Parking.......</b>';
+
+            $scope.cars = [
+                { plate: '6MBV006' },
+                { plate: '5BBM299' },
+                { plate: '5BBM242' },
+                { plate: '5AOJ230' }
+            ];
+
+            $scope.colors = [
+                "Black",
+                "White",
+                "Red",
+                "Yellow",
+                "Blue"
+            ];
+
+            $scope.park = function (car) {
+                console.log('parkingCtrl');
+                $scope.cars.push(angular.copy(car));
+                delete $scope.car;
+            }
+
+            $scope.removeCars = function () {
+                $scope.cars = [];
+            }
+
+        });
+
+        parking.controller('parkingAddCarCtrl', function ($scope) {
+            $scope.park = function (car) {
+                console.log('parkingAddCarCtrl');
+                $scope.cars.push(angular.copy(car));
+                delete $scope.car;
+            }
+        });
+    </script>
+
+    <style>
+        .selected {
+            background-color: #FAFAD2;
+        }
+    </style>
+
+</head>
+
+<body ng-controller="parkingCtrl">
+
+    <div ng-include="'menu.html'"></div>
+
+    <h3 ng-bind="title"></h3>
+    <!-- da erro, dizendo que eh unsafe -->
+    <!-- <h3 ng-bind-html="titleHtml"></h3> -->
+
+    <table ng-show="cars.length">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Plate</th>
+                <th>Color</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-class="{selected: car.selected}" ng-repeat="(index, car) in cars">
+                <td><input type="checkbox" ng-model="car.selected"></td>
+                <td>{{index +' - '+ car.plate}}</td>
+                <td>{{$first ? 'primeiro' : ''}}</td>
+                <td>{{$middle ? 'do meio' : ''}}</td>
+                <td>{{$last ? 'ultimo' : ''}}</td>
+                <td>{{$odd ? 'primo' : ''}}</td>
+                <td>{{$even ? 'par' : ''}}</td>
+                <td ng-if="car.color"><span ng-style="{color: car.color}" ng-bind="car.color"></span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div ng-hide="cars.length">
+        The parking lot is empty
+    </div>
+
+    <input type="text" ng-model="car.plate">
+    <select ng-model="car.color" ng-options="color for color in colors">
+        <option value="">Pick a Color</option>
+    </select>
+
+    <button ng-controller="parkingAddCarCtrl" ng-click="park(car)" ng-disabled="!car.plate">Park</button>
+
+</body>
+
+</html>
