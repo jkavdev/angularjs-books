@@ -26,4 +26,13 @@ parking.controller('parkingCtrl', function ($scope) {
         $scope.cars = [];
     }
 
+    $scope.showAlert = true;
+    $scope.alertTopic = 'Something went wrong!';
+    $scope.alertMessage = 'You must inform the plate and the color of the car!';
+    $scope.closeAlert = function () {
+        $scope.showAlert = false;
+    }
+
+
+
 });

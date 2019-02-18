@@ -9,7 +9,6 @@
     <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
     <link rel="stylesheet" type="text/css" href="css/app.css">
-
 </head>
 
 <body ng-controller="parkingCtrl">
@@ -17,6 +16,8 @@
     <div ng-include="'menu.html'"></div>
 
     <h3 ng-bind="title"></h3>
+
+    <alert ng-show="showAlert" topic="{{alertTopic}}" description="{{alertMessage}}" close="closeAlert()"></alert>
 
     <table ng-show="cars.length">
         <thead>

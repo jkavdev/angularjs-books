@@ -211,3 +211,48 @@
         <div ng-include="'menu.html'"></div>
 
         <button ng-click="removeCars()"></button>
+
+# A propria Diretiva        
+
+* criando uma diretiva para informacoes
+* indicando qual sera a forma que a diretiva sera chamada `restrict: 'E'`, no caso eh em forma de elemento
+* com `scope` definimos valores que serao passados para a diretiva
+* `@` o valor eh passado como uma `string`
+* `&` podemos passar funcoes para a diretiva
+* `templateUrl` indicamos aonde esta o `html` da diretiva
+* `replace` indica que o codigo, a html que chama o a diretiva sera subituida pelo html da diretiva
+* `transclude` indica que podemos ter `tags html` dentro da diretiva
+
+
+        parking.directive('alert', function () {
+                return {
+                        restrict: 'E',
+                        scope: {
+                                topic: '@',
+                                description: '@',
+                                close:'&'
+                        },
+                        templateUrl: "js\\alert.html",
+                        replace: true
+                }
+        });
+
+* acessamos os valores atribuidos a diretiva normalmente, pois esta no `scope`
+
+
+        <div class="alert">
+                <span class="alert-topic" ng-bind="topic"> Something went wrong!</span>
+                <span class="alert-description" ng-bind="description"> You must inform the plate and the color of  the car!</span>
+                <a href="" ng-click="close()">Close</a>
+        </div>
+
+* utilizando a diretiva
+
+        $scope.showAlert = true;
+        $scope.alertTopic = 'Something went wrong!';
+        $scope.alertMessage = 'You must inform the plate and the color of the car!';
+        $scope.closeAlert = function () {
+                $scope.showAlert = false;
+        }
+
+        <alert ng-show="showAlert" topic="{{alertTopic}}" description="{{alertMessage}}" close="closeAlert()"></alert>        
