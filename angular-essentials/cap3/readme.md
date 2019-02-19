@@ -85,3 +85,49 @@
 
 
         <td>{{car.plate | plate}}</td>
+
+# Validacao de dados com formularios 
+
+* definindo o formulario, no `angularjs` tem que se ter o nome do formulario
+
+        <form name="carForm">
+        </form>
+
+* definindo os campos do formulario, tem que se ter o nome dos `inputs` no formulario, com o atributo `name` preenchido
+
+        <form name="carForm">
+                <input type="text" name="plateField" placeholder="What's the plate?" ng-model="car.plate" ng-required="true"
+                        ng-minglength="6" ng-minglength="10" ng-pattern="/[A-Z]{3}[0-9]{3,7}/">
+                <select name="colorField" ng-model="car.color" ng-options="color for color in colors" ng-required="true">
+                        <option value="">Pick a Color</option>
+                </select>
+        </form>
+
+* habilitando o botao de adicionar, apenas se o formulario estiver valido, com todos os dado preenchidos corretamente
+* `carForm.$invalid` contem a `flag` indicando se todos os `inputs` do formularios estao de acordo
+
+
+        <button ng-click="park(car)" ng-disabled="carForm.$invalid">Park</button>
+
+* modificando o componente de mensagens de acordo com o estado dos `inputs` do formulario 
+* se tanto o campo `plate` ou `color`, nao estiver de acordo, sera exibido uma mensagem pelo componente
+
+
+        <alert ng-show="(carForm.plateField.$dirty && carForm.plateField.$invalid)
+                            || (carForm.colorField.$dirty && carForm.colorField.$invalid)" topic="{{alertTopic}}"
+            description="{{alertMessage}}" close="closeAlert()"></alert>
+
+* definindo validacoes basicas ao campo, como valor obrigatorio, valor minimo e maximo de caracteres, formato do valor a ser informado
+
+
+        <input type="text" name="plateField" placeholder="What's the plate?" ng-model="car.plate" ng-required="true"
+            ng-minglength="6" ng-minglength="10" ng-pattern="/[A-Z]{3}[0-9]{3,7}/">
+
+* exibindo outras mensagens mais espeficas do campo `plate`            
+
+
+        <span ng-show="carForm.plateField.$error.required">You must inform the plate of the car!</span><br>
+        <span ng-show="carForm.plateField.$error.minlength">The plate must have at least 6 characters!</span><br>
+        <span ng-show="carForm.plateField.$error.maxlength">The plate must have at most 10 characters!</span><br>
+        <span ng-show="carForm.plateField.$error.pattern">The plate must start with non-digits, followed by 4 to 7
+            numbers!</span><br>

@@ -18,6 +18,7 @@ parking.controller('parkingCtrl', function ($scope) {
     ];
 
     $scope.park = function (car) {
+        car.entrance = new Date();
         $scope.cars.push(angular.copy(car));
         delete $scope.car;
     }
@@ -32,7 +33,5 @@ parking.controller('parkingCtrl', function ($scope) {
     $scope.closeAlert = function () {
         $scope.showAlert = false;
     }
-
-
 
 });
