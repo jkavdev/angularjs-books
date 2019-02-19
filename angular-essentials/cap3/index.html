@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>AngularJs Essentials</title>
-    <script src="../js-deps/angular.js"></script>
-    <script src="../js-deps/angular-animate.js"></script>
+    <!-- <script src="../js-deps/angular.js"></script>
+    <script src="../js-deps/angular-animate.js"></script> -->
+    <script src="js/lib/angular.js"></script>
+    <script src="js/lib/angular-animate.js"></script>
+    <script src="js/lib/angular-locale_pt-br.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
@@ -20,21 +23,62 @@
 
     <alert ng-show="showAlert" topic="{{alertTopic}}" description="{{alertMessage}}" close="closeAlert()"></alert>
 
+    <input type="text" ng-model="criteria" placeholder="What are you looking for?">
+
     <table ng-show="cars.length">
         <thead>
             <tr>
                 <th></th>
-                <th>Plate</th>
-                <th>Color</th>
-                <th>Entrance</th>
+                <th>
+                    <a href="" ng-click="field = 'plate'; order=!order">Plate</a>
+                </th>
+                <th>
+                    <a href="" ng-click="field = 'color'; order=!order">Color</a>
+                </th>
+                <th><a href="" ng-click="field = 'entrance'; order=!order">Entrance</a></th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-class="{selected: car.selected}" ng-repeat="(index, car) in cars">
+            <tr ng-class="{selected: car.selected}" ng-repeat="(index, car) in cars | filter:criteria | orderBy:field:order">
                 <td><input type="checkbox" ng-model="car.selected"></td>
-                <td><span ng-bind="car.plate"></span></td>
-                <td ng-if="car.color"><span ng-bind="car.color"></span></td>
-                <td><span ng-bind="car.entrance"></span></td>
+                <td>{{car.plate | lowercase | uppercase}}</td>
+                <td>{{car.color}}</td>
+                <td>{{car.entrance}}</td>
+
+                <td>
+                    {{10 | currency}}
+                </td>
+                <td>
+                    {{10 | currency:'R$'}}
+                </td>
+                <td>
+                    {{car.entrance | date}}
+                </td>
+                <td>
+                    {{car.entrance | date:'MMM dd/MM/yyyy HH:mm:ss'}}
+                </td>
+
+                <td>
+                    {{
+                        car | json
+                    }}
+                </td>
+                <td>
+                    {{
+                        'sera exibido apenas 10 caracteres' | limitTo:10
+                    }}
+                </td>
+                <td>
+                    {{
+                        105 | number:2
+                    }}
+                </td>
+                <td>
+                    {{
+                        105 | number:3
+                    }}
+                </td>
+
             </tr>
         </tbody>
     </table>

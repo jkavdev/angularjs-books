@@ -3,10 +3,10 @@ parking.controller('parkingCtrl', function ($scope) {
     $scope.title = 'Parking.......';
 
     $scope.cars = [
-        { plate: '6MBV006' },
-        { plate: '5BBM299' },
-        { plate: '5BBM242' },
-        { plate: '5AOJ230' }
+        { plate: '6MBV006', entrance: '2019-02-01' },
+        { plate: '5BBM299', entrance: '2019-11-10' },
+        { plate: '5BBM242', entrance: '2019-12-02' },
+        { plate: '5AOJ230', entrance: '2019-06-05' }
     ];
 
     $scope.colors = [
