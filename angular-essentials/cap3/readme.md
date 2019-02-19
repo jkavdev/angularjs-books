@@ -60,3 +60,28 @@
 
 
         <td>{{car.plate | uppercase | lowercase}}</td>
+
+# Diretiva `Plate`        
+
+* criando uma diretiva que pegar o resultado do atributo `car.plate` e aplicar um filtro no valor
+* definindo a diretiva com o nome `plate`
+
+
+        parking.filter('plate', function () {
+                return function (input) {
+                        var firstPart = input.substring(0, 3);
+                        var secondPart = input.substring(0, 3);
+                        return `${firstPart} - ${secondPart}`;
+                }
+        });
+
+* registrando o `filter` criado
+
+
+        <script src="js/filters.js"></script>
+
+* utilizando o `filter` criado         
+* resultado sera de `5BBM299` para `5BB - M299`
+
+
+        <td>{{car.plate | plate}}</td>

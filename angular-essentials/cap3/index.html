@@ -12,6 +12,7 @@
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
+    <script src="js/filters.js"></script>
     <link rel="stylesheet" type="text/css" href="css/app.css">
 </head>
 
@@ -33,6 +34,9 @@
                     <a href="" ng-click="field = 'plate'; order=!order">Plate</a>
                 </th>
                 <th>
+                    <a href="" ng-click="field = 'plate'; order=!order">Plate Formatted</a>
+                </th>
+                <th>
                     <a href="" ng-click="field = 'color'; order=!order">Color</a>
                 </th>
                 <th><a href="" ng-click="field = 'entrance'; order=!order">Entrance</a></th>
@@ -41,7 +45,8 @@
         <tbody>
             <tr ng-class="{selected: car.selected}" ng-repeat="(index, car) in cars | filter:criteria | orderBy:field:order">
                 <td><input type="checkbox" ng-model="car.selected"></td>
-                <td>{{car.plate | lowercase | uppercase}}</td>
+                <td>{{car.plate | uppercase }}</td>
+                <td>{{car.plate | lowercase | uppercase | plate}}</td>
                 <td>{{car.color}}</td>
                 <td>{{car.entrance}}</td>
 
