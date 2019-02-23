@@ -51,8 +51,10 @@ parking.controller('parkingCtrl', function ($scope, $http,
     const retrieveCars = function () {
         $http.get(uriCars)
             .then((resp, status, headers, config) => {
-                console.log('carros buscados: ', resp.data);
-                $scope.cars = resp.data;
+                let cars = resp.data;
+                console.log('carros buscados: ', cars);
+                cars.forEach(item => item.entrance = new Date(item.entrance))
+                $scope.cars = cars;
             }).catch((error, status, header, config) => console.error('deu erro: ', error));
     }
 
