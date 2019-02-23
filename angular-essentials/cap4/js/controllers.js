@@ -1,7 +1,6 @@
-parking.controller('parkingCtrl', function ($scope, $http,
-    parkingFactory, parkingService, parkingServiceProvider) {
-
-    const uriCars = 'http://localhost:8081/cars';
+parking.controller('parkingCtrl', function ($scope,
+    parkingFactory, parkingService, parkingServiceProvider,
+    parkingHttpFacade) {
 
     $scope.title = 'Parking Lot';
 
@@ -49,7 +48,7 @@ parking.controller('parkingCtrl', function ($scope, $http,
     }
 
     const retrieveCars = function () {
-        $http.get(uriCars)
+        parkingHttpFacade.getCars()
             .then((resp, status, headers, config) => {
                 let cars = resp.data;
                 console.log('carros buscados: ', cars);
@@ -59,12 +58,13 @@ parking.controller('parkingCtrl', function ($scope, $http,
     }
 
     $scope.park = function (car) {
-        $http.post(uriCars, car)
+        parkingHttpFacade.park(car)
             .then((resp, status, headers, config) => {
                 console.log('car saved: ', resp.data);
                 delete $scope.car;
                 retrieveCars();
             }).catch((error, status, header, config) => console.error('deu erro: ', error));
+
     }
 
     retrieveCars();

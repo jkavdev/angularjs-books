@@ -114,6 +114,48 @@
                 $http.get('http://localhost:8081/cars')
                 .then((resp, status, headers, config) => {
                         console.log('carros buscados: ', resp.data);
-                        $scope.cars = resp.data;
                 }).catch((error, status, header, config) => console.error('deu erro: ', error));
+        }
+
+* utilizando o verbo `post` para salvar o carro
+
+        $scope.park = function (car) {
+                $http.post(uriCars, car)
+                .then((resp, status, headers, config) => {
+                        console.log('car saved: ', resp.data);
+                }).catch((error, status, header, config) => console.error('deu erro: ', error));
+        }
+
+* criando uma `facade` sobre os metodos da `service` `$http`
+
+        parking.factory('parkingHttpFacade', function ($http) {
+        const uriCars = 'http://localhost:8081/cars';
+        var _getCars = function () {
+                return $http.get(uriCars);
+        }
+        var _park = function (car) {
+                return $http.post(uriCars, car);
+        }
+        return {
+                getCars: _getCars,
+                park: _park
+        }
+        });
+
+* refatorando codigo do `controller`
+
+
+        const retrieveCars = function () {
+                parkingHttpFacade.getCars()
+                .then((resp, status, headers, config) => {
+                        console.log('carros buscados: ', resp.data);
+                }).catch((error, status, header, config) => console.error('deu erro: ', error));
+        }
+
+        $scope.park = function (car) {
+                parkingHttpFacade.park(car)
+                .then((resp, status, headers, config) => {
+                        console.log('car saved: ', resp.data);
+                }).catch((error, status, header, config) => console.error('deu erro: ', error));
+
         }

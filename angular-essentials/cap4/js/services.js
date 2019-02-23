@@ -61,3 +61,22 @@ parking.provider('parkingServiceProvider', function (parkingConfig) {
     }
 
 });
+
+parking.factory('parkingHttpFacade', function ($http) {
+
+    const uriCars = 'http://localhost:8081/cars';
+
+    var _getCars = function () {
+        return $http.get(uriCars);
+    }
+
+    var _park = function (car) {
+        return $http.post(uriCars, car);
+    }
+
+    return {
+        getCars: _getCars,
+        park: _park
+    }
+
+});
