@@ -1,6 +1,8 @@
 parking.controller('parkingCtrl', function ($scope, $http,
     parkingFactory, parkingService, parkingServiceProvider) {
 
+    const uriCars = 'http://localhost:8081/cars';
+
     $scope.title = 'Parking Lot';
 
     $scope.colors = [
@@ -10,12 +12,6 @@ parking.controller('parkingCtrl', function ($scope, $http,
         "Yellow",
         "Blue"
     ];
-
-    $scope.park = function (car) {
-        car.entrance = new Date();
-        $scope.cars.push(angular.copy(car));
-        delete $scope.car;
-    }
 
     $scope.removeCars = function () {
         $scope.cars = [];
@@ -53,10 +49,19 @@ parking.controller('parkingCtrl', function ($scope, $http,
     }
 
     const retrieveCars = function () {
-        $http.get('http://localhost:8081/cars')
+        $http.get(uriCars)
             .then((resp, status, headers, config) => {
                 console.log('carros buscados: ', resp.data);
                 $scope.cars = resp.data;
+            }).catch((error, status, header, config) => console.error('deu erro: ', error));
+    }
+
+    $scope.park = function (car) {
+        $http.post(uriCars, car)
+            .then((resp, status, headers, config) => {
+                console.log('car saved: ', resp.data);
+                delete $scope.car;
+                retrieveCars();
             }).catch((error, status, header, config) => console.error('deu erro: ', error));
     }
 

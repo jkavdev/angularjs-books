@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,6 +22,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty
     private String plate;
 
     private LocalDateTime entrance;
