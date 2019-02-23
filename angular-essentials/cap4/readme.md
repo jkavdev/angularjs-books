@@ -159,3 +159,33 @@
                 }).catch((error, status, header, config) => console.error('deu erro: ', error));
 
         }
+
+
+# Configurando os `headers` da `service $http`
+* para configuracoes que precisam ser atualizadas, antes da aplicacao subir, utiliza-se o `run`
+* por padrao o `$http` tem no `header` o valor `Accept: "application/json, text/plain, */*"`
+* alteraremos para apenas `application/json`
+
+
+        parking.run(function ($http) {
+                $http.defaults.headers.common.Accept = 'application/json';
+                console.log('headers alterado: ', $http.defaults.headers)
+        })
+
+* habilitando `cache` com o `angularjs`
+* sera armazenado as respostas do servidor, e sera retornado o mesmo resultado, caso a requisicao seja a mesma
+* mas cuidado, pois algumas funcionalidades necessitam de dados atualizados
+
+
+        parking.run(function ($http) {
+                $http.defaults.cache = true;
+        });
+
+* testando
+* sera apenas realizado a primeira requisicao, depois sera utilizado o mesmo resultado da primeira requisicao
+
+        //com o cache habilitado
+        retrieveCars();
+        retrieveCars();
+        retrieveCars();
+

@@ -67,6 +67,9 @@ parking.controller('parkingCtrl', function ($scope,
 
     }
 
+    //com o cache habilitado, sera apenas requisicao ao servidor uma vez
+    retrieveCars();
+    retrieveCars();
     retrieveCars();
 
 });
