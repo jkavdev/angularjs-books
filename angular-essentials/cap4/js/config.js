@@ -1,3 +1,5 @@
-parking.config(function (parkingServiceProvider) {
-    parkingServiceProvider.setParkingRate(10);
+parking.config(function (parkingServiceProviderProvider, $httpProvider) {
+    parkingServiceProviderProvider.setParkingRate(10);
+
+    $httpProvider.interceptors.push('httpTimestampInterceptor');
 });

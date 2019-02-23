@@ -189,3 +189,35 @@
         retrieveCars();
         retrieveCars();
 
+# `Interceptors`
+
+* criaremos um `interceptor` para adicionar sempre na requisicao um parametro de quando foi feito a requisicao
+* um `interceptor` eh apenas uma `factory`
+* criando o `interceptor`
+* como o `interceptor` intercepta tudo, realizamos uma verificacao para apenas as requisicoes do `backend`
+
+
+        parking.factory('httpTimestampInterceptor', function () {
+                return {
+                        'request': function (config) {
+                                if (config.url.startsWith('http')) {
+                                        const timestamp = Date.now();
+                                        config.url = `${config.url}?ts=${timestamp}`
+                                }
+                                return config
+                        }
+                }
+        });
+
+* registrando o `interceptor` no `config` do angularjs
+
+
+        parking.config(function ($httpProvider) {
+                $httpProvider.interceptors.push('httpTimestampInterceptor');
+        });
+
+* importando arquivos na aplicacao
+
+
+        <script src="js/inteceptors.js"></script>
+        <script src="js/config.js"></script>
