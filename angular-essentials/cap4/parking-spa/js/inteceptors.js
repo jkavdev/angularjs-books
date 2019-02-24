@@ -3,7 +3,7 @@ parking.factory('httpTimestampInterceptor', function () {
         'request': function (config) {
 
             if (config.url.startsWith('http')) {
-                console.log('request: ', config)
+                // console.log('request: ', config)
                 console.log('url: ', config.url);
 
                 const timestamp = Date.now();

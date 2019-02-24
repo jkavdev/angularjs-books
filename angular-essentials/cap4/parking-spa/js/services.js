@@ -74,9 +74,23 @@ parking.factory('parkingHttpFacade', function ($http) {
         return $http.post(uriCars, car);
     }
 
+    var _retrieveCar = function (id) {
+        return $http.get(`${uriCars}/${id}`).then(resp => {
+            let car = resp.data;
+            car.entrance = new Date(car.entrance);
+            return car;
+        });
+    }
+
+    var _deleteCar = function (id) {
+        return $http.delete(`${uriCars}/${id}`);
+    }
+
     return {
         getCars: _getCars,
-        park: _park
+        retrieveCar: _retrieveCar,
+        park: _park,
+        deleteCar: _deleteCar,
     }
 
 });

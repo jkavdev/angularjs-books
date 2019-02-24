@@ -221,3 +221,162 @@
 
         <script src="js/inteceptors.js"></script>
         <script src="js/config.js"></script>
+
+# Single Page Application
+
+# Router
+
+* importando o `router` do `angularjs` para realizar o roteamento das telas da aplicacao
+
+        
+        <script src="js/lib/angular-route.js"></script>
+
+* registrando o novo modulo
+
+
+        var parking = angular.module('parking', ['ngAnimate', 'ngRoute']);
+
+* configurando as rotas
+* criaremos duas rotas, uma para a listagem de carros, e outra para exibicao dos detalhes do carro
+* para a configuracao das rotas utilizamos o `$routeProvider`
+* configuramos uma rota com o metodo `when`, onde indicamos o caminho para chamar esta rota `/parking`
+* indicamos onde esta o `html` e o `controller`
+* e se for digitado qualquer outra rota desconhecida, ele redireciona para o `/parking`, trabalho feito com o `otherwise`
+
+
+        parking.config(function ($routeProvider) {
+                $routeProvider
+                        .when('/parking', {
+                                templateUrl: 'parking.html',
+                                controller: 'parkingCtrl'
+                        })
+                        .when('/car/:id', {
+                                templateUrl: 'car.html',
+                                controller: 'carCtrl'
+                        })
+                        .otherwise({
+                                redirecTo: '/parking'
+                        });
+                });        
+
+* refatorando a tela `index.html`                
+* temos apenas a definicao das dependencias utilizadas pela aplicacao
+* e a diretiva de roteamento `<div ng-view></div>`, deixando a cargo do `ngRoute` o gerenciamento de telas
+
+
+        <!DOCTYPE html>
+        <html ng-app="parking">
+        <head>
+                <script src="js/lib/angular.js"></script>
+                <script src="js/lib/angular-route.js"></script>
+                <script src="js/config.js"></script>
+        </head>
+        <body>
+                <div ng-view></div>
+        </body>
+        </html>
+
+* criando o arquivo com a listagem de carros `parking.html`
+
+
+        <input type="text" ng-model="criteria" placeholder="What are you looking for?">
+        <table ng-show="cars.length">
+        <thead>
+                <tr>
+                <th></th>
+                <th><a href="" ng-click="field = 'plate'; order=!order">Plate</a></th>
+                <th><a href="" ng-click="field = 'color'; order=!order">Color</a></th>
+                <th><a href="" ng-click="field = 'entrance'; order=!order">Entrance</a></th>
+                <th>depart</th>
+                <th>depart</th>
+                </tr>
+        </thead>
+        <tbody>
+                <tr ng-class="{selected: car.selected}"
+                ng-repeat="(index, car) in cars | filter:criteria | orderBy:field:order">
+                <td><input type="checkbox" ng-model="car.selected"></td>
+                <td>{{car.plate | plate}}</td>
+                <td>{{car.color}}</td>
+                <td>{{car.entrance | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td><button ng-click="calculateTicketFactory(car)">depart with factory</button></td>
+                <td><button ng-click="calculateTicketService(car)">depart with service</button></td>
+                <td><button ng-click="calculateTicketServiceProvider(car)">depart with service provider</button></td>
+                <td><a href="#/car/{{car.id}}">{{car.plate | plate}}</a></td>
+                </tr>
+        </tbody>
+        </table>
+        <div ng-hide="cars.length">
+        The parking lot is empty
+        </div>
+        <form name="carForm" novalidate>
+        <alert ng-show="(carForm.plateField.$dirty && carForm.plateField.$invalid)
+                                || (carForm.colorField.$dirty && carForm.colorField.$invalid)" topic="{{alertTopic}}"
+                description="{{alertMessage}}" close="closeAlert()"></alert>
+
+        <span ng-show="carForm.plateField.$error.required">You must inform the plate of the car!</span><br>
+        <span ng-show="carForm.plateField.$error.minlength">The plate must have at least 6 characters!</span><br>
+        <span ng-show="carForm.plateField.$error.maxlength">The plate must have at most 10 characters!</span><br>
+        <span ng-show="carForm.plateField.$error.pattern">The plate must start with non-digits, followed by 4 to 7
+                numbers!</span><br>
+        <input type="text" name="plateField" placeholder="What's the plate?" ng-model="car.plate" ng-required="true"
+                ng-minglength="6" ng-minglength="10" ng-pattern="/[A-Z]{3}[0-9]{3,7}/">
+
+        <select name="colorField" ng-model="car.color" ng-options="color for color in colors" ng-required="true">
+                <option value="">Pick a Color</option>
+        </select>
+        <button ng-click="park(car)" ng-disabled="carForm.$invalid">Park</button>
+        </form>
+
+* criando o arquivo com os detalhes do carro `car.html`
+
+
+        <h3>Car Details</h3>
+        <h5>Plate</h5> {{car.plate}}
+        <h5>Color</h5> {{car.color}}
+        <h5>Entrance</h5> {{car.entrance | date:'dd/MM/yyyy hh:mm'}}
+        <h5>Period</h5> {{ticket.period}}
+        <h5>Price</h5> {{ticket.price | currency}}
+        <button ng-click="depart(car)">Depart</button>
+        <a href="#/parking">Back to parking</a>
+
+* acessando as telas pelo roteamento
+* acessando a listagem de carros
+
+
+        http://localhost:8080/#/parking
+
+
+* acessando os dados do carro em especifico
+
+
+        http://localhost:8080/#/car/2
+
+* realizando a navegacao de rotas com `links html`
+* sera realizado um direcionamento para a rota de carro, passando o id do carro
+
+
+        <td><a href="#/car/{{car.id}}">{{car.plate | plate}}</a></td>
+
+* direcionando para a rota de carros  
+
+        <a href="#/parking">Back to parking</a>        
+
+* passando parametros com `$routeParams`        
+* na rota de carros indicamos que receberemos o id do carro pela rota `/car/:id`
+
+
+        .when('/car/:id', {
+            templateUrl: 'car.html',
+            controller: 'carCtrl'
+        })
+
+* recebendo o paramento no `controller` com `$routeParams`
+* acessando o valor pelo nome `$routeParams.id`
+
+
+        parking.controller('carCtrl', function ($routeParams) {
+                const retrieveCar = function (id) {
+                        parkingHttpFacade.retrieveCar(id)
+                }
+                retrieveCar($routeParams.id);
+        })
