@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="parking">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJs Essentials</title>
+    <!-- <script src="../js-deps/angular.js"></script>
+    <script src="../js-deps/angular-animate.js"></script> -->
+    <script src="js/lib/angular.js"></script>
+    <script src="js/lib/angular-animate.js"></script>
+    <script src="js/lib/angular-locale_pt-br.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/run.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/inteceptors.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="js/filters.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+</head>
+
+<body ng-controller="parkingCtrl">
+
+    <div ng-include="'menu.html'"></div>
+
+    <h3 ng-bind="title"></h3>
+
+    <input type="text" ng-model="criteria" placeholder="What are you looking for?">
+
+    <table ng-show="cars.length">
+        <thead>
+            <tr>
+                <th></th>
+                <th><a href="" ng-click="field = 'plate'; order=!order">Plate</a></th>
+                <th><a href="" ng-click="field = 'color'; order=!order">Color</a></th>
+                <th><a href="" ng-click="field = 'entrance'; order=!order">Entrance</a></th>
+                <th>depart</th>
+                <th>depart</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-class="{selected: car.selected}"
+                ng-repeat="(index, car) in cars | filter:criteria | orderBy:field:order">
+                <td><input type="checkbox" ng-model="car.selected"></td>
+                <td>{{car.plate | plate}}</td>
+                <td>{{car.color}}</td>
+                <td>{{car.entrance | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td><button ng-click="calculateTicketFactory(car)">depart with factory</button></td>
+                <td><button ng-click="calculateTicketService(car)">depart with service</button></td>
+                <td><button ng-click="calculateTicketServiceProvider(car)">depart with service provider</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div ng-hide="cars.length">
+        The parking lot is empty
+    </div>
+
+    <div ng-if="departed">
+        <h2>Car departed {{car.plate}}</h2>
+
+        <div>{{car.color}}</div>
+        <div>entrance {{car.entrance  | date:'dd/MM/yyyy HH:mm:ss'}}</div>
+        <div>depart {{car.departed | date:'dd/MM/yyyy HH:mm:ss'}}</div>
+        <div>ticket {{ticket.price | currency}}</div>
+    </div>
+
+    <form name="carForm" novalidate>
+        <alert ng-show="(carForm.plateField.$dirty && carForm.plateField.$invalid)
+                            || (carForm.colorField.$dirty && carForm.colorField.$invalid)" topic="{{alertTopic}}"
+            description="{{alertMessage}}" close="closeAlert()"></alert>
+
+        <span ng-show="carForm.plateField.$error.required">You must inform the plate of the car!</span><br>
+        <span ng-show="carForm.plateField.$error.minlength">The plate must have at least 6 characters!</span><br>
+        <span ng-show="carForm.plateField.$error.maxlength">The plate must have at most 10 characters!</span><br>
+        <span ng-show="carForm.plateField.$error.pattern">The plate must start with non-digits, followed by 4 to 7
+            numbers!</span><br>
+
+        <input type="text" name="plateField" placeholder="What's the plate?" ng-model="car.plate" ng-required="true"
+            ng-minglength="6" ng-minglength="10" ng-pattern="/[A-Z]{3}[0-9]{3,7}/">
+
+        <select name="colorField" ng-model="car.color" ng-options="color for color in colors" ng-required="true">
+            <option value="">Pick a Color</option>
+        </select>
+
+        <button ng-click="park(car)" ng-disabled="carForm.$invalid">Park</button>
+
+        <br> plateField:: {{carForm.plateField.$viewValue}} - {{ carForm.plateField.$error }}
+        <br> colorField:: {{carForm.colorField.$viewValue}} - {{ carForm.colorField.$error }}
+
+    </form>
+
+</body>
+
+</html>
