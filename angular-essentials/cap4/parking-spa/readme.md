@@ -380,3 +380,29 @@
                 }
                 retrieveCar($routeParams.id);
         })
+
+# Mudando de rotas no `controller`        
+* para termos que mudar de rota sem se preocupar aonde o pagina esta atualmente
+* podemos utilizar o `$location` para realizar mudancas de rotas
+* quando removermos um carro mudaremos para a listagem de carros, `$location.path('/parking')`
+* quando precisamos navegar ate um arquivo, podemos utilizar o `$window`
+* se houver erro na resposta da requisicao, redirecionaremos para a pagina de erro na raiz do projeto `$window.location.href = 'error.html'`
+
+
+        parking.controller('carCtrl', function ($location, $window,
+                parkingHttpFacade) {
+                $scope.depart = function (car) {
+                        parkingHttpFacade.deleteCar(car.id)
+                        .then(() => $location.path('/parking'))
+                        .catch(error => {
+                                $window.location.href = 'error.html';
+                        })
+                }
+                const retrieveCar = function (id) {
+                        parkingHttpFacade.retrieveCar(id)
+                        .then(car => {
+                        }).catch(error => {
+                                $window.location.href = 'error.html';
+                        })
+                }
+        })

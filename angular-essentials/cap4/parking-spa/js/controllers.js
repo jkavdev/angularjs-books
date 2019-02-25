@@ -1,4 +1,5 @@
 parking.controller('parkingCtrl', function ($scope,
+    cars,
     parkingFactory, parkingService, parkingServiceProvider,
     parkingHttpFacade) {
 
@@ -74,28 +75,23 @@ parking.controller('parkingCtrl', function ($scope,
 
 });
 
-parking.controller('carCtrl', function ($scope, $routeParams,
+parking.controller('carCtrl', function ($scope, $routeParams, $location, $window,
+    car,
     parkingHttpFacade, parkingService) {
 
     $scope.depart = function (car) {
         parkingHttpFacade.deleteCar(car.id)
-            .then(() => $scope.message = 'OK')
+            .then(() => $location.path('/parking'))
             .catch(error => {
                 console.error('erro: ', error);
-                $scope.message = 'Something went wrong!';
+                $window.location.href = 'error.html';
             })
     }
 
-    const retrieveCar = function (id) {
-        parkingHttpFacade.retrieveCar(id)
-            .then(car => {
-                $scope.car = car;
-                $scope.ticket = parkingService.calculateTicket(car);
-            }).catch(error => {
-                console.error('erro: ', error);
-                $scope.message = 'Something went wrong!';
-            })
+    const retrieveCar = function (car) {
+        $scope.car = car;
+        $scope.ticket = parkingService.calculateTicket(car);
     }
 
-    retrieveCar($routeParams.id);
+    retrieveCar(car);
 })
