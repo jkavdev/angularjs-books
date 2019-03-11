@@ -1,10 +1,12 @@
-parking.config(function ($httpProvider, $routeProvider, $locationProvider,
+parking.config(function ($httpProvider, $routeProvider, $locationProvider, $logProvider,
     parkingServiceProviderProvider) {
     parkingServiceProviderProvider.setParkingRate(10);
 
     $httpProvider.interceptors.push('httpTimestampInterceptor');
 
     $locationProvider.hashPrefix('');
+
+    $logProvider.debugEnabled(false);
 
     $routeProvider
         .when('/parking', {

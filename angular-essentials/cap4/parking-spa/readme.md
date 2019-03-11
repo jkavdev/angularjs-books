@@ -406,3 +406,70 @@
                         })
                 }
         })
+
+# Resolvendo `Promises`
+
+* poderiamos indicar para os controllers ``carCtrl e parkingCtrl`` que vao receber as dependencias assincronamente
+* nas configuracoes das rotas podemos indicar que antes de disponibilizar o `controller`, primeira carregue as informacoes do `resolve` e disponibilize-as para o `controller`
+
+
+        resolve: {
+                'cars': function (parkingHttpFacade) {
+                        return parkingHttpFacade.getCars();
+                }
+        }
+
+* recebendo o valor pode injecao de dependencia no controller
+
+
+        parking.controller('parkingCtrl', function (cars) {
+                .....
+        })
+
+# Interceptando os eventos de rotas
+
+* podemos interceptar os eventos da rotas como o inicio, o fim e quando houver erro
+* poderiamos ate criar uma funcionalidade de `carregamento`
+* `$routeChangeStart` sera executado ao inicio da rota
+* `$routeChangeSuccess` sera executado ao fim da rota quando nao houver erro
+* `$routeChangeError` sera executado se houver algum erro durante o carregamento da rota
+* podemos configrar este acesso no `run`
+
+
+        parking.run(function ($http, $rootScope) {
+                $rootScope.$on('$routeChangeStart', function (event, current, previous, rejection) {
+                        $rootScope.loading = true;
+                });
+
+                $rootScope.$on('$routeChangeSuccess', function (event, current, previous, rejection) {
+                        $rootScope.loading = false;
+                });
+
+                $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
+                        $window.location.href = 'error.html';
+                });
+
+        });
+
+
+# Utilizando `Log`
+
+* podemos utilizar a propria solucao de `logs` do `angularjs $log` 
+
+* funciona exatamento como qualquer outro, temos os metodos `info`, `debug` `error` e outros
+
+
+        parking.controller('parkingCtrl', function ($log) {
+                $log.info('Logging com angularjs $log');
+                $log.debug('aperecera caso debug esteje habilitado');
+                $log.info('Logging com angularjs $log');
+                $log.error('Logging com angularjs $log');
+                $log.warn('Logging com angularjs $log');
+        }
+
+* podemos ate configurar para disabilitar os logs de debug
+
+
+        parking.config(function ($logProvider) {
+                $logProvider.debugEnabled(false);
+        });

@@ -1,7 +1,13 @@
-parking.controller('parkingCtrl', function ($scope,
+parking.controller('parkingCtrl', function ($scope, $log,
     cars,
     parkingFactory, parkingService, parkingServiceProvider,
     parkingHttpFacade) {
+
+    $log.info('Logging com angularjs $log');
+    $log.debug('aperecera caso debug esteje habilitado');
+    $log.info('Logging com angularjs $log');
+    $log.error('Logging com angularjs $log');
+    $log.warn('Logging com angularjs $log');
 
     $scope.title = 'Parking Lot';
 
